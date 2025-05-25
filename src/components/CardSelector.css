@@ -1,0 +1,127 @@
+/* Card Selector Styling */
+.card-selector {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.card-selector h2 {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.card-selector-counter {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.card-selector-counter span {
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.suit-group {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.suit-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.suit-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.suit-symbol {
+  font-size: 1.5rem;
+  margin-right: 8px;
+}
+
+.suit-name {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.suit-red {
+  color: #dc2626;
+}
+
+.suit-black {
+  color: #111827;
+}
+
+.rank-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.rank-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  font-weight: 500;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rank-button:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-2px);
+}
+
+.rank-button:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.rank-button.red {
+  color: #dc2626;
+}
+
+.rank-button.black {
+  color: #111827;
+}
+
+/* Quick Selection Bar */
+.quick-selection {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  gap: 8px;
+}
+
+.quick-selection button {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.quick-selection button:hover {
+  background-color: #e5e7eb;
+}

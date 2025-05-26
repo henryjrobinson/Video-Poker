@@ -257,7 +257,85 @@ export function runPatternTests(): { passed: number, failed: number, total: numb
  * This can be called from the browser console or included in a test page
  */
 export function runTests(): void {
-  runPatternTests();
+  // Direct output that will show up even if other logs are being captured
+  process.stdout.write('\n==== VIDEO POKER PATTERN CALCULATOR TESTS ====\n\n');
+  
+  const results = runPatternTests();
+  
+  process.stdout.write(`\n==== PATTERN CALCULATOR RESULTS: ${results.passed}/${results.total} passed (${(results.passed/results.total*100).toFixed(2)}%) ====\n\n`);
+  
+  // Test the specific test cases that were failing before
+  process.stdout.write('\n==== TESTING SPECIFIC FAILING PATTERNS ====\n\n');
+  testSpecificFailingPatterns();
+}
+
+/**
+ * Test specific patterns that were failing in the previous test runs
+ */
+function testSpecificFailingPatterns(): void {
+  const testCases = [
+    {
+      name: "4 to a Royal Flush (A-K-Q-J)",
+      hand: createCards(['AS', 'KS', 'QS', 'JS', '2H']),
+      expectedHold: [0, 1, 2, 3] // Expecting to hold A-K-Q-J (first 4 cards)
+    },
+    {
+      name: "4 to a Straight Flush (J-10-9-8)",
+      hand: createCards(['JS', '10S', '9S', '8S', '2H']),
+      expectedHold: [0, 1, 2, 3] // Expecting to hold J-10-9-8 (first 4 cards)
+    },
+    {
+      name: "4 to a Flush (Hearts)",
+      hand: createCards(['AH', 'KH', '9H', '5H', '2S']),
+      expectedHold: [0, 1, 2, 3] // Expecting to hold the 4 hearts (first 4 cards)
+    },
+    {
+      name: "4 to an Outside Straight (J-10-9-8)",
+      hand: createCards(['JS', '10H', '9D', '8C', '2S']),
+      expectedHold: [0, 1, 2, 3] // Expecting to hold J-10-9-8 (first 4 cards)
+    },
+    {
+      name: "K-Q-J-10 with Ace of different suit (edge case)",
+      hand: createCards(['KS', 'QS', 'JS', '10S', 'AH']),
+      expectedHold: [0, 1, 2, 3] // Expecting to hold K-Q-J-10 (first 4 cards)
+    }
+  ];
+  
+  let passed = 0;
+  
+  for (const testCase of testCases) {
+    const result = calculateOptimalPlay(testCase.hand, defaultPayTable);
+    const holdPattern = result.optimal.holdPattern;
+    const holdPositions = [];
+    
+    // Convert hold pattern to positions
+    for (let i = 0; i < 5; i++) {
+      if ((holdPattern & (1 << i)) !== 0) {
+        holdPositions.push(i);
+      }
+    }
+    
+    // Sort positions for comparison
+    const sortedExpected = [...testCase.expectedHold].sort((a, b) => a - b);
+    const sortedActual = [...holdPositions].sort((a, b) => a - b);
+    
+    // Check if arrays are equal
+    const isEqual = sortedExpected.length === sortedActual.length && 
+                   sortedExpected.every((value, index) => value === sortedActual[index]);
+    
+    if (isEqual) {
+      process.stdout.write(`✅ PASS: ${testCase.name}\n`);
+      passed++;
+    } else {
+      process.stdout.write(`❌ FAIL: ${testCase.name}\n`);
+      process.stdout.write(`  Expected: ${sortedExpected}\n`);
+      process.stdout.write(`  Actual:   ${sortedActual}\n`);
+      process.stdout.write(`  Description: ${result.optimal.description}\n`);
+      process.stdout.write(`  EV: ${result.optimal.ev}\n`);
+    }
+  }
+  
+  process.stdout.write(`\n==== Specific Pattern Tests: ${passed}/${testCases.length} passed (${(passed/testCases.length*100).toFixed(2)}%) ====\n\n`);
 }
 
 /**

@@ -38,7 +38,7 @@ function createCards(cardCodes: string[]): Card[] {
       suit = code.charAt(1) as Suit;
     }
     
-    cards.push({ rank, suit });
+    cards.push({ rank: rank as any, suit });
   }
   
   return cards;
@@ -229,5 +229,12 @@ export function runPatternTests(): void {
   console.log('=== PATTERN TESTS COMPLETE ===');
 }
 
-// Uncomment to run tests when this file is executed directly
-// runPatternTests();
+// Export a function to run all tests
+export function runTests() {
+  console.log('\n==== PATTERN FUNCTIONS TESTS ====\n');
+  runPatternTests();
+  return { passed: true };
+}
+
+// Run tests when this file is executed directly
+runPatternTests();

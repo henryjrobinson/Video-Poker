@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card as CardType, Suit, Rank, createDeck } from '../lib/cards';
 import './CardSelector.css';
 
@@ -7,8 +7,13 @@ interface CardSelectorProps {
   onCardSelect: (card: CardType) => void;
 }
 
+// No quick selection interface needed
+
 const CardSelector: React.FC<CardSelectorProps> = ({ selectedCards, onCardSelect }) => {
   const deck = createDeck();
+  
+  // State for the currently active suit tab
+  const [activeSuit, setActiveSuit] = useState<Suit>('S');
   
   // Group cards by suit
   const cardsBySuit: Record<Suit, CardType[]> = {
@@ -52,12 +57,7 @@ const CardSelector: React.FC<CardSelectorProps> = ({ selectedCards, onCardSelect
     }
   };
   
-  // Predefined hands for quick selection
-  const handleQuickSelect = (handType: string) => {
-    // This would be implemented to select predefined hand patterns
-    console.log(`Quick select: ${handType}`);
-    // Implementation would depend on the actual card data structure
-  };
+  // No quick selection options
   
   return (
     <div className="card-selector">
@@ -66,47 +66,54 @@ const CardSelector: React.FC<CardSelectorProps> = ({ selectedCards, onCardSelect
         Select 5 cards to see analysis (<span>{selectedCards.length}/5</span> selected)
       </p>
       
-      {Object.entries(cardsBySuit).map(([suit, cards]) => {
-        const { symbol, name, colorClass } = getSuitInfo(suit as Suit);
-        
-        return (
-          <div key={suit} className="suit-group">
-            <div className="suit-header">
-              <span className={`suit-symbol ${colorClass}`}>{symbol}</span>
-              <span className="suit-name">{name}</span>
+      {/* Suit tabs for mobile-friendly navigation */}
+      <div className="suit-tabs">
+        {Object.keys(cardsBySuit).map(suit => {
+          const { symbol, colorClass } = getSuitInfo(suit as Suit);
+          return (
+            <div 
+              key={suit}
+              className={`suit-tab ${colorClass} ${activeSuit === suit ? 'active' : ''}`}
+              onClick={() => setActiveSuit(suit as Suit)}
+              aria-label={`Select ${getSuitInfo(suit as Suit).name}`}
+            >
+              {symbol}
             </div>
-            
-            <div className="rank-buttons">
-              {sortedRanks.map(rank => {
-                const card = cards.find(c => c.rank === rank);
-                if (!card) return null;
-                
-                const isSelected = isCardSelected(card);
-                const buttonColorClass = colorClass.replace('suit-', '');
-                
-                return (
-                  <button
-                    key={`${card.rank}-${card.suit}`}
-                    className={`rank-button ${buttonColorClass}`}
-                    onClick={() => !isSelected && onCardSelect(card)}
-                    disabled={isSelected}
-                    aria-label={`${rankDisplay[card.rank]} of ${name}`}
-                  >
-                    {rankDisplay[card.rank]}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-      
-      <div className="quick-selection">
-        <button onClick={() => handleQuickSelect('royal')}>Royal Flush</button>
-        <button onClick={() => handleQuickSelect('straight')}>Straight Flush</button>
-        <button onClick={() => handleQuickSelect('four')}>Four of a Kind</button>
-        <button onClick={() => handleQuickSelect('fullhouse')}>Full House</button>
+          );
+        })}
       </div>
+      
+      {/* Show only the active suit group */}
+      <div className="suit-group">
+        <div className="suit-header">
+          <span className={`suit-symbol ${getSuitInfo(activeSuit).colorClass}`}>{getSuitInfo(activeSuit).symbol}</span>
+          <span className="suit-name">{getSuitInfo(activeSuit).name}</span>
+        </div>
+        
+        <div className="rank-buttons">
+          {sortedRanks.map(rank => {
+            const card = cardsBySuit[activeSuit].find(c => c.rank === rank);
+            if (!card) return null;
+            
+            const isSelected = isCardSelected(card);
+            const buttonColorClass = getSuitInfo(activeSuit).colorClass.replace('suit-', '');
+            
+            return (
+              <button
+                key={`${card.rank}-${card.suit}`}
+                className={`rank-button ${buttonColorClass}`}
+                onClick={() => !isSelected && onCardSelect(card)}
+                disabled={isSelected}
+                aria-label={`${rankDisplay[card.rank]} of ${getSuitInfo(activeSuit).name}`}
+              >
+                {rankDisplay[card.rank]}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+      
+      {/* No quick select options */}
     </div>
   );
 };

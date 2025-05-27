@@ -9,100 +9,142 @@
 
 .card-selector h2 {
   text-align: center;
-  margin-bottom: 16px;
+  margin-bottom: 0.5rem;
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: bold;
   color: #1e40af;
 }
 
 .card-selector-counter {
   text-align: center;
-  margin-bottom: 16px;
-  font-size: 0.875rem;
-  color: #4b5563;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .card-selector-counter span {
-  font-weight: 600;
-  color: #3b82f6;
+  font-weight: bold;
+  color: #3182ce;
+}
+
+/* Suit tabs at the top */
+.suit-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 10;
+}
+
+.suit-tab {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  font-size: 1.5rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.suit-tab.active {
+  border-bottom-color: #3182ce;
+}
+
+.suit-tab.red {
+  color: #e53e3e;
+}
+
+.suit-tab.black {
+  color: #2d3748;
 }
 
 .suit-group {
-  margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.suit-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
 }
 
 .suit-header {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .suit-symbol {
-  font-size: 1.5rem;
-  margin-right: 8px;
+  font-size: 1.75rem;
+  margin-right: 0.5rem;
 }
 
 .suit-name {
-  font-weight: 500;
-  font-size: 1rem;
-}
-
-.suit-red {
-  color: #dc2626;
-}
-
-.suit-black {
-  color: #111827;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .rank-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+/* For smaller screens, reduce to 6 columns */
+@media (max-width: 360px) {
+  .rank-buttons {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
 
 .rank-button {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 0.25rem;
   display: flex;
-  justify-content: center;
   align-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 4px;
-  font-weight: 500;
-  background-color: white;
-  border: 1px solid #d1d5db;
+  justify-content: center;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.rank-button:hover:not(:disabled) {
-  background-color: #f9fafb;
-  border-color: #9ca3af;
-  transform: translateY(-2px);
-}
-
-.rank-button:disabled {
-  background-color: #f3f4f6;
-  color: #9ca3af;
-  cursor: not-allowed;
-  opacity: 0.7;
+  transition: all 0.15s;
+  border: 1px solid #cbd5e0;
+  font-size: 1.1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 0;
 }
 
 .rank-button.red {
-  color: #dc2626;
+  background-color: #fff5f5;
+  color: #e53e3e;
 }
 
 .rank-button.black {
-  color: #111827;
+  background-color: #f7fafc;
+  color: #2d3748;
 }
+
+.rank-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.rank-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #edf2f7;
+}
+
+.suit-red {
+  color: #e53e3e;
+}
+
+.suit-black {
+  color: #2d3748;
+}
+
+/* No quick selection styles needed */
 
 /* Quick Selection Bar */
 .quick-selection {

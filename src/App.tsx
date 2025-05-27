@@ -3,15 +3,21 @@ import './App.css';
 
 // Core game modules
 import { Card as CardType, createDeck } from './lib/cards';
-// Use the pattern-based calculator
-import { calculateOptimalPlay, PlayResult } from './lib/pattern-calculator';
+// Use the identity-based calculator instead of position-based
+import { calculateOptimalPlay, PlayResult } from './lib/identity-pattern-calculator';
 import { defaultPayTable } from './lib/paytables';
+// Card utility functions for identity-based approach
+import { shouldHoldCard, cardsToPositionPattern } from './lib/card-utils';
+
+// Strategy guide
+import { strategyChartText, expectedValueExplanation } from './lib/strategy-guide';
 
 // Components
 import CardDisplay from './components/CardDisplay';
 import CardSelector from './components/CardSelector';
 import ResultsPanel from './components/ResultsPanel';
 import TestRunner from './components/TestRunner';
+import StrategyExplainer from './components/StrategyExplainer';
 
 // Add CSS for tab navigation
 import './styles/tabs.css';
@@ -23,7 +29,7 @@ function App() {
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
   
   // Tab navigation state
-  const [activeTab, setActiveTab] = useState<'calculator' | 'test-runner'>('calculator');
+  const [activeTab, setActiveTab] = useState<'calculator' | 'strategy'>('calculator');
   
   // Analysis results
   const [analysisResult, setAnalysisResult] = useState<PlayResult | null>(null);
@@ -39,10 +45,11 @@ function App() {
         console.log('Analysis result:', result);
         setAnalysisResult(result);
         
-        // Update held cards based on optimal play
-        const optimalHeldPattern = result.optimal.holdPattern;
-        const newHeldCards = Array(5).fill(false).map((_, i) => 
-          Boolean(optimalHeldPattern & (1 << i))
+        // Update held cards based on card identities from optimal play
+        // Instead of using holdPattern, we check if each card should be held based on its identity
+        const cardsToHold = result.optimal.cardsToHold;
+        const newHeldCards = (hand as CardType[]).map(card => 
+          shouldHoldCard(card, cardsToHold)
         );
         setHeldCards(newHeldCards);
       } catch (error) {
@@ -89,11 +96,16 @@ function App() {
     setAnalysisResult(null);
   };
 
-  // Apply a different hold pattern
-  const handleSelectAlternative = (holdPattern: number) => {
-    const newHeldCards = Array(5).fill(false).map((_, i) => 
-      Boolean(holdPattern & (1 << i))
+  // Apply a different hold pattern based on card identities
+  const handleSelectAlternative = (alternative: any) => {
+    // Use the cardsToHold from the alternative strategy
+    const cardsToHold = alternative.cardsToHold;
+    
+    // Check each card in the hand to see if it should be held
+    const newHeldCards = (hand as CardType[]).map(card => 
+      shouldHoldCard(card, cardsToHold)
     );
+    
     setHeldCards(newHeldCards);
   };
 
@@ -138,6 +150,38 @@ function App() {
       <TestRunner />
     </div>
   );
+  
+  // Render the strategy guide tab content
+  const renderStrategyGuide = () => (
+    <div className="strategy-guide-container">
+      <h2 className="text-2xl font-bold mb-4">Video Poker Strategy Guide</h2>
+      
+      <div className="mb-6 p-4 bg-white rounded-lg shadow-sm">
+        <h3 className="text-xl font-bold mb-2">Understanding Expected Value</h3>
+        <div className="prose">
+          <StrategyExplainer showGeneral={true} />
+        </div>
+      </div>
+      
+      <div className="mb-6 p-4 bg-white rounded-lg shadow-sm">
+        <h3 className="text-xl font-bold mb-2">Complete Strategy Chart</h3>
+        <div className="prose whitespace-pre-line">
+          <pre className="bg-gray-100 p-4 rounded text-sm overflow-auto">
+            {strategyChartText}
+          </pre>
+        </div>
+      </div>
+      
+      <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">About This Calculator</h3>
+        <p className="text-blue-700 text-sm">
+          This calculator uses a pattern-based approach to analyze video poker hands, just like
+          real machines. It follows expert strategy for Jacks or Better (9/6) and can help you
+          learn optimal play for every situation.
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="app-container p-4 max-w-4xl mx-auto">
@@ -153,16 +197,20 @@ function App() {
             Calculator
           </button>
           <button 
-            className={`tab-button ${activeTab === 'test-runner' ? 'active' : ''}`}
-            onClick={() => setActiveTab('test-runner')}
+            className={`tab-button ${activeTab === 'strategy' ? 'active' : ''}`}
+            onClick={() => setActiveTab('strategy')}
           >
-            Test Rig
+            Strategy Guide
           </button>
+          {/* Test rig tab hidden */}
         </div>
       </header>
       
       <div className="tab-content">
-        {activeTab === 'calculator' ? renderCalculator() : renderTestRunner()}
+        {activeTab === 'calculator' 
+          ? renderCalculator() 
+          : renderStrategyGuide()
+        }
       </div>
     </div>
   );

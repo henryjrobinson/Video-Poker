@@ -24,6 +24,43 @@
     - [ ] One Pair scenarios
     - [ ] Near Royal/Straight/Flush scenarios
     - [ ] Edge cases
+      - [x] **Priority Conflicts**
+        - [x] Low Pair vs. 4 to a Flush: Ensure correct hold when both are present
+        - [x] 3 to a Royal vs. Low Pair: Verify the royal draw is preferred only in specific scenarios
+        - [x] 4 to an Inside Straight with 3+ High Cards vs. High Cards only
+        - [x] 3 to a Straight Flush vs. Low Pair: Confirm correct strategy based on EV
+      - [ ] **Card Combinations**
+        - [x] Overlapping Draws: Hand contains both flush and straight potential
+        - [x] Multiple High Cards across different suits
+        - [x] Near Royal with Lower Pair present
+        - [x] Ace-Low Straight Flush Draws (A-2-3-4 suited)
+      - [ ] **Suit-Specific Cases**
+        - [x] Royal Potential in Multiple Suits
+        - [x] High Cards Same Suit vs. Different Suits (JQ suited vs. JQ unsuited)
+      - [x] **Deceptive Hands**
+        - [x] Almost Royal but Better Play exists (e.g., pat straight flush)
+        - [x] Full House with 4 to a Royal Possibility
+        - [x] Four of a Kind with Royal Potential
+      - [x] **Additional Edge Cases**
+        - [x] Handling Ties in Expected Value
+        - [x] Optimal Strategy Exceptions
+        - [x] Multiple Straight Flush Draws
+      - [x] **Advanced Edge Cases**
+        - [x] Pay Table Variations (9/6, 8/5, etc.)
+        - [x] Special Kicker Considerations
+        - [x] Ace-Low Straight Edge Cases
+        - [x] Gap Position Significance
+        - [x] Sequential Royal Draws
+        - [x] High-Card Ranking Subtleties
+      - [ ] **Future Advanced Edge Cases**
+        - [ ] Penalty Card Considerations
+        - [ ] Transitional Probabilities
+        - [ ] Two High Pair vs. Four to a Flush
+        - [ ] Tournament Strategy Adjustments
+        - [ ] Redraw Probabilities
+        - [ ] Three-Card Straight Flush Variations
+        - [ ] Card Removal Effects in Multi-Hand Games
+        - [ ] Bankroll Management Integration
   - [ ] Add comprehensive unit tests for calculation logic
 - [ ] Deploy to Netlify/Vercel
 

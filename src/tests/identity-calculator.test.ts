@@ -5,6 +5,7 @@
  * identifies which cards to hold, especially for the previously failing test cases.
  */
 
+import { describe, test, expect } from '@jest/globals';
 import { Card, Suit } from '../lib/cards';
 import { calculateOptimalPlay } from '../lib/identity-pattern-calculator';
 import { defaultPayTable } from '../lib/paytables';
@@ -154,5 +155,37 @@ export function runTests(): { passed: number, failed: number, total: number } {
   return { passed, failed, total };
 }
 
-// Run the tests when this file is executed directly
-runTests();
+// Convert test cases to Jest tests
+describe('Identity-Based Pattern Calculator', () => {
+  // Loop through each test case
+  testCases.forEach(testCase => {
+    test(testCase.name, () => {
+      const hand = createCards(testCase.hand);
+      const expectedCardsToHold = createCards(testCase.expectedCardsToHold);
+      
+      const result = calculateOptimalPlay(hand, defaultPayTable);
+      
+      // Check description matches
+      expect(result.optimal.description).toBe(testCase.expectedDescription);
+      
+      // Get the held cards based on the hold pattern
+      const heldCards: Card[] = [];
+      for (let i = 0; i < 5; i++) {
+        if ((result.optimal.holdPattern & (1 << i)) !== 0) {
+          heldCards.push(hand[i]);
+        }
+      }
+      
+      // Check that we're holding the correct number of cards
+      expect(heldCards.length).toBe(expectedCardsToHold.length);
+      
+      // Check that each expected card is held
+      // Note: This is a more flexible test than exact matching
+      expectedCardsToHold.forEach(expectedCard => {
+        const isHeld = heldCards.some(heldCard => 
+          heldCard.rank === expectedCard.rank && heldCard.suit === expectedCard.suit);
+        expect(isHeld).toBe(true);
+      });
+    });
+  });
+});

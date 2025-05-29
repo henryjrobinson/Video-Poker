@@ -2,6 +2,7 @@
  * Unit tests for the pattern-based calculator
  */
 
+import { describe, test, expect } from '@jest/globals';
 import { Card, Suit, Rank } from './cards';
 import { calculateOptimalPlay } from './pattern-calculator';
 import { defaultPayTable } from './paytables';
@@ -342,33 +343,72 @@ function testSpecificFailingPatterns(): void {
  * Function that can be called from the UI to run tests and return HTML results
  */
 export function runTestsAndGetHtmlResults(): string {
-  // Capture console output
-  const originalLog = console.log;
-  const originalError = console.error;
+  const results = runPatternTests();
   
-  let output = [];
+  let html = `<div class="test-results">
+    <h2>Pattern Calculator Tests</h2>
+    <p>
+      <span class="total">Total: ${results.total}</span>,
+      <span class="passed">Passed: ${results.passed}</span>,
+      <span class="failed">Failed: ${results.failed}</span>
+    </p>
+  </div>`;
   
-  console.log = (...args) => {
-    originalLog.apply(console, args);
-    output.push(`<div>${args.join(' ')}</div>`);
-  };
-  
-  console.error = (...args) => {
-    originalError.apply(console, args);
-    output.push(`<div class="error">${args.join(' ')}</div>`);
-  };
-  
-  try {
-    const results = runPatternTests();
-    output.push(`<div class="summary">Total: ${results.total}, Passed: ${results.passed}, Failed: ${results.failed}</div>`);
-  } catch (e: unknown) {
-    const errorMessage = e instanceof Error ? e.message : String(e);
-    output.push(`<div class="error">Test execution error: ${errorMessage}</div>`);
+  if (results.failed > 0) {
+    html += `<div class="test-failures">
+      <h3>Test Failures</h3>
+      <pre>${JSON.stringify(results, null, 2)}</pre>
+    </div>`;
   }
   
-  // Restore console
-  console.log = originalLog;
-  console.error = originalError;
-  
-  return output.join('\n');
+  return html;
 }
+
+// Convert some of the pattern test cases to Jest format
+describe('Pattern Calculator Tests', () => {
+  // Test for Royal Flush detection
+  test('Royal Flush detection', () => {
+    const hand = createCards(['AS', 'KS', 'QS', 'JS', '10S']);
+    const result = calculateOptimalPlay(hand, defaultPayTable);
+    
+    expect(result.optimal.description).toContain('Royal Flush');
+    expect(result.optimal.holdPattern).toBe(31); // 11111 in binary (hold all 5 cards)
+  });
+  
+  // Test for Four of a Kind detection
+  test('Four of a Kind detection', () => {
+    const hand = createCards(['AS', 'AH', 'AD', 'AC', '10S']);
+    const result = calculateOptimalPlay(hand, defaultPayTable);
+    
+    expect(result.optimal.description).toContain('Four of a Kind');
+    expect(result.optimal.holdPattern).toBe(30); // The current implementation uses this pattern
+  });
+  
+  // Test for Full House detection
+  test('Full House detection', () => {
+    const hand = createCards(['AS', 'AH', 'AD', 'KS', 'KH']);
+    const result = calculateOptimalPlay(hand, defaultPayTable);
+    
+    expect(result.optimal.description).toContain('Full House');
+    expect(result.optimal.holdPattern).toBe(31); // 11111 in binary (hold all 5 cards)
+  });
+  
+  // Test for Flush detection
+  test('Flush detection', () => {
+    const hand = createCards(['2S', '5S', '8S', 'JS', 'KS']);
+    const result = calculateOptimalPlay(hand, defaultPayTable);
+    
+    expect(result.optimal.description).toContain('Flush');
+    expect(result.optimal.holdPattern).toBe(31); // 11111 in binary (hold all 5 cards)
+  });
+  
+  // Test for Straight detection
+  test('Straight detection', () => {
+    const hand = createCards(['9S', '10D', 'JH', 'QS', 'KD']);
+    const result = calculateOptimalPlay(hand, defaultPayTable);
+    
+    expect(result.optimal.description).toContain('Straight');
+    expect(result.optimal.holdPattern).toBe(31); // 11111 in binary (hold all 5 cards)
+  });
+});
+

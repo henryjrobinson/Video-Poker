@@ -5,7 +5,9 @@
  * they correctly identify the patterns they're designed to detect.
  */
 
+import { describe, test, expect } from '@jest/globals';
 import { Card, Suit } from '../lib/cards';
+import { JACKS_OR_BETTER_9_6 } from '../lib/pay-tables';
 
 // Import the pattern functions from the calculator
 // Note: These are not exported, but we'll test the exported calculator instead
@@ -236,5 +238,29 @@ export function runTests() {
   return { passed: true };
 }
 
-// Run tests when this file is executed directly
-runPatternTests();
+// Convert the existing test infrastructure to Jest tests
+describe('Pattern Detection Functions', () => {
+  test('Royal Flush pattern detection', () => {
+    const hand = createCards(['AS', 'KS', 'QS', 'JS', '10S']);
+    const result = calculateOptimalPlay(hand, JACKS_OR_BETTER_9_6);
+    
+    expect(result.optimal.description).toContain('Royal Flush');
+    expect(result.optimal.ev).toBeGreaterThan(0);
+  });
+
+  test('Four of a Kind pattern detection', () => {
+    const hand = createCards(['AS', 'AH', 'AD', 'AC', '10S']);
+    const result = calculateOptimalPlay(hand, JACKS_OR_BETTER_9_6);
+    
+    expect(result.optimal.description).toContain('Four of a Kind');
+    expect(result.optimal.ev).toBeGreaterThan(0);
+  });
+
+  test('Full House pattern detection', () => {
+    const hand = createCards(['AS', 'AH', 'AD', 'KS', 'KH']);
+    const result = calculateOptimalPlay(hand, JACKS_OR_BETTER_9_6);
+    
+    expect(result.optimal.description).toContain('Full House');
+    expect(result.optimal.ev).toBeGreaterThan(0);
+  });
+});

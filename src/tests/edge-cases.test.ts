@@ -12,8 +12,14 @@
  */
 
 import { describe, test, expect, jest, afterAll } from '@jest/globals';
-import { Card, Suit } from '../lib/cards';
-import { calculateOptimalPlay } from '../lib/pattern-calculator';
+import { Card, PlayResult, calculateOptimalPlay, HandRank, PayTable } from '../lib/calculator';
+import { createHandFromString } from './test-helpers';
+
+// Extend the global type to include our test properties
+declare global {
+  var calculateOptimalPlay: typeof calculateOptimalPlay;
+}
+
 import { JACKS_OR_BETTER_9_6, JACKS_OR_BETTER_8_5, JACKS_OR_BETTER_7_5, JACKS_OR_BETTER_6_5 } from '../lib/pay-tables';
 import { handleEdgeCaseTest, holdPatternFromString } from './test-utils';
 
@@ -55,9 +61,13 @@ function getHeldPositions(holdPattern: number): number[] {
 
 // Mock the calculateOptimalPlay function to use our test handler
 const originalCalculate = calculateOptimalPlay;
-// @ts-ignore - Override global for tests
+
+// Type declaration for jest mock function
+type CalculateOptimalPlayType = typeof calculateOptimalPlay;
+
+// Properly typed mock implementation
 global.calculateOptimalPlay = jest.fn().mockImplementation(
-  (hand: Card[], payTable: any) => {
+  ((hand: Card[], payTable: PayTable) => {
     // Check if we have a special test case
     const mockResult = handleEdgeCaseTest(hand, payTable);
     if (mockResult) {
@@ -65,7 +75,7 @@ global.calculateOptimalPlay = jest.fn().mockImplementation(
     }
     // Otherwise use the original implementation
     return originalCalculate(hand, payTable);
-  }
+  }) as CalculateOptimalPlayType
 );
 
 // Reset the mock after tests

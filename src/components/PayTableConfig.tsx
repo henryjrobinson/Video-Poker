@@ -53,7 +53,7 @@ const PayTableConfig: React.FC<PayTableConfigProps> = ({ payTable, onPayTableCha
   );
   
   const handlePresetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const presetName = e.target.value;
+    const presetName = e.target.value as keyof typeof payTablePresets;
     if (presetName && payTablePresets[presetName]) {
       onPayTableChange(payTablePresets[presetName]);
     }

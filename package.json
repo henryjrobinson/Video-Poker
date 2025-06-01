@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit --skipLibCheck --project tsconfig.build.json && vite build",
-    "build:netlify": "tsc --noEmit --skipLibCheck --project tsconfig.build.json && vite build",
+    "build": "npm run build:clean",
+    "build:clean": "tsc --noEmit --skipLibCheck --project tsconfig.build.json && vite build",
+    "build:netlify": "npm run build:clean",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest"

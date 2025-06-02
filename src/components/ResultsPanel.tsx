@@ -181,10 +181,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 const isCloseToOptimal = Math.abs(percentDifference) < 5; // Within 5% of optimal
                 
                 return (
-                  <div key={index} className="border border-gray-200 rounded-lg p-3 bg-white">
-                    <div className="flex justify-between items-start mb-2">
+                  <div key={index} className="border border-gray-200 rounded-lg p-4 bg-white hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-3">
                       <div>
-                        <div className="font-medium flex items-center">
+                        <div className="font-medium text-lg flex items-center">
                           {alt.description}
                           {isCloseToOptimal && (
                             <span className="ml-2 bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-0.5 rounded">Close to Optimal</span>
@@ -195,43 +195,36 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
                         </div>
                       </div>
                       <button 
-                        className="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 py-1 px-2 rounded"
+                        className="text-sm bg-blue-500 hover:bg-blue-600 text-white py-1.5 px-3 rounded shadow-sm transition-colors"
                         onClick={() => onSelectAlternative(alt)}
                       >
                         Try This Play
                       </button>
                     </div>
                     
-                    <div className="text-sm mt-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Expected Value:</span>
-                        <span className="font-medium">{alt.ev.toFixed(2)} coins</span>
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="bg-gray-50 p-2 rounded">
+                        <div className="text-xs text-gray-500 mb-1">Expected Value</div>
+                        <div className="font-semibold text-base">{alt.ev.toFixed(2)} coins</div>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Cash Value:</span>
-                        <span>{formatEVasDollars(alt.ev)}</span>
-                      </div>
-                      <div className="flex justify-between items-center mt-1">
-                        <span className="text-gray-600">Compared to optimal:</span>
-                        <span className={`font-medium ${evDifference >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {evDifference > 0 ? '+' : ''}{evDifference.toFixed(2)} coins ({percentDifference.toFixed(1)}%)
-                        </span>
+                      <div className="bg-gray-50 p-2 rounded">
+                        <div className="text-xs text-gray-500 mb-1">Cash Value</div>
+                        <div className="font-semibold text-base">{formatEVasDollars(alt.ev)}</div>
                       </div>
                     </div>
                     
-                    {/* Comparative EV visualization */}
-                    <div className="mt-2 relative h-6 bg-gray-100 rounded overflow-hidden">
-                      {/* Baseline for optimal play */}
-                      <div className="absolute top-0 bottom-0 border-r-2 border-black" style={{ left: `${Math.min(Math.max(result.ev / 10 * 100, 5), 100)}%` }}></div>
-                      {/* Alternative play */}
-                      <div className={`absolute top-0 bottom-0 ${alt.ev >= result.ev ? 'bg-green-200' : 'bg-red-200'}`} 
-                           style={{ 
-                             left: evDifference < 0 ? `${Math.min(Math.max(alt.ev / 10 * 100, 0), 100)}%` : `${Math.min(Math.max(result.ev / 10 * 100, 0), 100)}%`,
-                             width: `${Math.abs(evDifference) / 10 * 100}%`
-                           }}>
+                    <div className="flex items-center bg-gray-50 p-2 rounded">
+                      <div className="text-xs text-gray-500 mr-2">Compared to optimal:</div>
+                      <div className={`font-semibold ${evDifference >= 0 ? 'text-green-600' : 'text-red-600'} flex-grow`}>
+                        {evDifference >= 0 ? '+' : ''}{evDifference.toFixed(2)} coins ({percentDifference.toFixed(1)}%)
                       </div>
-                      <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-700">
-                        Optimal vs Alternative
+                      
+                      {/* Comparison visualization */}
+                      <div className="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full ${evDifference >= 0 ? 'bg-green-500' : 'bg-red-500'}`}
+                          style={{ width: `${Math.max(Math.min(Math.abs(percentDifference) * 2, 100), 5)}%` }}
+                        ></div>
                       </div>
                     </div>
                   </div>

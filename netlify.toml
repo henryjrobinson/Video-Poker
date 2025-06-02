@@ -1,6 +1,7 @@
 [build]
-  command = "vite build"
+  command = "npm run build"
   publish = "dist"
+  ignore = "git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF ./"
 
 [dev]
   command = "npm run dev"
@@ -9,6 +10,7 @@
   publish = "dist"
   autoLaunch = true
 
+# SPA redirect fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"

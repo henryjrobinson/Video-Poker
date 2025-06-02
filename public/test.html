@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deployment Test Page</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      display: inline-block;
+      width: 80px;
+      height: 120px;
+      border: 2px solid #000;
+      border-radius: 10px;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+      font-size: 24px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .red { color: red; }
+    .black { color: black; }
+    h1 { color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <h1>Video Poker Test Page</h1>
+  <p>If you can see this page, static content deployment is working correctly.</p>
+  
+  <div>
+    <div class="card red">♥<br>A</div>
+    <div class="card red">♦<br>K</div>
+    <div class="card black">♠<br>Q</div>
+    <div class="card black">♣<br>J</div>
+    <div class="card red">♥<br>10</div>
+  </div>
+  
+  <p>This is a simple HTML test page with no JavaScript dependencies.</p>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Test page loaded successfully');
+    });
+  </script>
+</body>
+</html>

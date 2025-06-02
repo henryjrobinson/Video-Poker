@@ -1,10 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App'
+// Import debug version for deployment testing
+import AppDebug from './App.debug'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <AppDebug />
   </StrictMode>,
 )

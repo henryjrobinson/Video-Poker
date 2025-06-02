@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import excludeTestImports from './exclude-test-imports'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), excludeTestImports()],
   // Base path for production - important for Netlify
   base: '',
   build: {

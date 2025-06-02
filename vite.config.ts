@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Base path for production - important for Netlify
-  base: '/',
+  base: './',
   build: {
     // Output directory that will be served
     outDir: 'dist',

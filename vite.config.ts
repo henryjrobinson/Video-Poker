@@ -23,11 +23,23 @@ export default defineConfig({
         // Exclude test files
         /\.test\.tsx?$/,
         /\.spec\.tsx?$/,
-        // Exclude test directories and files
+        // Exclude all test-related files
         /[\\/]tests[\\/]/,
         /[\\/]__tests__[\\/]/,
+        /test-hands/,
+        /test-runner/,
+        /pattern-calculator\.test/,
         '@jest/globals'
-      ]
+      ],
+      output: {
+        // Ensure proper chunk naming and paths
+        manualChunks(id) {
+          // Group test files separately to ensure they're not included
+          if (id.includes('test') || id.includes('jest')) {
+            return 'tests';
+          }
+        }
+      }
     }
   },
   // Optimize dev server

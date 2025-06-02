@@ -16,7 +16,7 @@ import { strategyChartText, expectedValueExplanation } from './lib/strategy-guid
 import CardDisplay from './components/CardDisplay';
 import CardSelector from './components/CardSelector';
 import ResultsPanel from './components/ResultsPanel';
-import TestRunner from './components/TestRunner';
+import TestRunnerWrapper from './components/TestRunnerWrapper';
 import StrategyExplainer from './components/StrategyExplainer';
 
 // Add CSS for tab navigation
@@ -147,7 +147,7 @@ function App() {
   // Render the test runner tab content
   const renderTestRunner = () => (
     <div className="test-runner-container">
-      <TestRunner />
+      <TestRunnerWrapper />
     </div>
   );
   
